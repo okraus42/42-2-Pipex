@@ -1,126 +1,206 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:42:22 by okraus            #+#    #+#             */
-/*   Updated: 2023/03/22 13:09:55 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/06 19:02:43 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/push_swap.h"
+#include "../header/pipex.h"
 
-//convert array of indexes into double linked list
-static void	push_swap_4(int *arr_i, int *arr_s, int size)
+//get paths
+void ft_fix_first_path(char **s)
 {
-	t_ps_info	inf;
-	t_ps_info	*info;
-	int			**arr_x;
+	int		i;
+	int		l;
+	char	*str;
 
-	info = &inf;
-	info->a_size = size;
-	info->a_start = NULL;
-	info->b_size = 0;
-	info->b_start = NULL;
-	ft_initialize_stack_a(arr_i, info);
-	ft_ps_pushb(arr_s, info, size);
-	ft_ps_bruteforce(info);
-	arr_x = malloc(sizeof(int *) * 8);
-	ft_create_arrx(arr_x, size);
-	ft_ps_pusha(&arr_x, info, size);
-	ft_free_arrx(&arr_x);
-	if (info->a_start)
-		ft_dlstclear2(&info->a_start);
-	if (info->b_start)
-		ft_dlstclear2(&info->b_start);
+	i = 0;
+	str = *s;
+	l = ft_strlen(str);
+	while (str[i + 5])
+	{
+		str[i] = str[i + 5];
+		i++;
+	}
+	while (i < l)
+	{
+		str[i] = '\0';
+		i++;
+	}
 }
 
-//convert array of original integers into array of indexes
-static int	push_swap_3(int *arr_o, int size)
+static char	*ft_pathjoin(char *path, char *cmd)
 {
-	int		*arr_i;
-	int		*arr_s;
+	char	*str;
+	int		i;
+	int		j;
 
-	if (ft_check_error_duplicates(arr_o, size))
-		return (1);
-	if (size < 2)
-		return (0);
-	arr_i = ft_calloc (sizeof(int), size);
-	arr_s = ft_calloc (sizeof(int), size);
-	ft_index_array(&arr_o, &arr_i, size);
-	ft_index_stack(&arr_s, size);
-	if (ft_ps_sortcheck(arr_i, size))
-		push_swap_4(arr_i, arr_s, size);
-	free(arr_i);
-	free(arr_s);
+	i = 0;
+	j = 0;
+	str = ft_calloc(ft_strlen(path) + 2 + ft_strlen(cmd), sizeof(char));
+	while (path[i])
+	{
+		str[i] = path[i];
+		i++;
+	}
+	str[i] = '/';
+	i++;
+	while (cmd[j])
+	{
+		str[i + j] = cmd[j];
+		j++;
+	}
+	return (str);
+}
+
+static int	ft_test_exec(t_pipex_info *info)
+{
+	int		i;
+	int		fail;
+	char	*cmd;
+
+	i = 0;
+	fail = 1;
+	info->args = ft_split(info->av[1], ' ');
+	while (info->paths[i])
+	{
+		cmd = ft_pathjoin(info->paths[i], info->args[0]);
+		execve(cmd, info->args, info->ev);
+		free(cmd);
+		i++;
+	}
+	ft_printf_fd(2, "Fail to run %s", info->av[1]);
+	return (fail);
+}
+
+static int	paths(t_pipex_info *info)
+{
+	int	i;
+
+	i = 0;
+	info->paths = NULL;
+	ft_printf("%i = %s\n", i, info->ev[5]);
+	while (info->ev[i])
+	{
+		ft_printf("%i = %s\n", i, info->ev[i]);
+		if (info->ev[i][0] == 'P' && info->ev[i][1] == 'A' && info->ev[i][2] == 'T'
+			&& info->ev[i][3] == 'H' && info->ev[i][4] == '=')
+		{
+			ft_printf("envp %d = %s\n", i, info->ev[i]);
+			info->paths = ft_split(info->ev[i], ':');
+		}
+		i++;
+	}
+	ft_fix_first_path(&info->paths[0]);
 	return (0);
 }
 
-//get array of strings from long string and convert them into array of integers
-static int	push_swap_2(char *str)
+static int	ft_copy_strarray(int n, char **src, char ***dst)
 {
-	char	**nums;
-	int		size;
-	int		j;
-	int		*arr_o;
+	int	i;
+	int	j;
 
-	size = 0;
-	nums = ft_split(str, ' ');
-	while (nums[size])
-		size++;
-	if (ft_check_error(nums, size))
-		return (ft_free_split(nums), 1);
-	arr_o = ft_calloc (sizeof(int), size);
-	j = 0;
-	while (j < size)
+	i = 0;
+	dst[0] = ft_calloc((n + 1), sizeof(char*));
+	if (!dst[0])
 	{
-		arr_o[j] = ft_atoi(nums[j]);
-		j++;
+		return (1);
 	}
-	j = push_swap_3(arr_o, size);
-	ft_free_split(nums);
-	free(arr_o);
-	return (j);
+	while (i < n)
+	{
+		j = 0;
+		dst[0][i] = ft_calloc((ft_strlen(src[i]) + 1), sizeof(char));
+		if (!dst[0][i])
+		{
+			return (2);
+		}
+		while (src[i] && src[i][j])
+		{
+			//ft_printf("test5 %c %d %d\n", src[i][j], i, n);
+			dst[0][i][j] = src[i][j];
+			j++;
+		}
+		dst[0][i][j] = '\0';
+		i++;
+	}
+	dst[0][n] = NULL;
+	return (0);
 }
 
-//convert arguments into array of integers
-static int	push_swap_1(int argc, char *argv[])
+void ft_put_strarray(char **arr)
 {
-	int		size;
-	int		j;
-	int		*arr_o;
+	int	i;
 
-	size = argc - 1;
-	j = 0;
-	argv = &argv[1];
-	if (ft_check_error(argv, size))
-		return (1);
-	arr_o = ft_calloc (sizeof(int), size);
-	while (j < size)
+	i = 0;
+	while (arr[i])
 	{
-		arr_o[j] = ft_atoi(argv[j]);
-		j++;
+		ft_printf("arr%02i : %s\n", i, arr[i]);
+		i++;
 	}
-	j = push_swap_3(arr_o, size);
-	free(arr_o);
-	return (j);
+}
+
+static int	ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[])
+{
+	char	**avi;
+	char	**evi;
+	int		en;
+	int		i;
+
+	avi = NULL;
+	evi = NULL;
+	en = 0;
+	info->ac = ac;
+	//ft_put_strarray(av);
+	ft_copy_strarray(ac, av, &avi);
+	//ft_put_strarray(avi);
+	info->av = avi;
+	while (ev[en])
+	{
+		//ft_printf("%i:%s\n", en, ev[en]);
+		en++;
+	}
+	ft_copy_strarray(en, ev, &evi);
+	info->ev = evi;
+	ft_put_strarray(info->ev);
+	ft_put_strarray(evi);
+	paths(info);
+	i = 0;
+	while (info->paths && info->paths[i])
+	{
+		ft_printf("path %i = %s\n", i, info->paths[i]);
+		i++;
+	}
+	ft_test_exec(info);
+	return (0);
+}
+
+static int	pipex(int argc, char *argv[], char *envp[])
+{
+	t_pipex_info info;
+	int	i;
+
+	ft_get_info(&info, argc, argv, envp);
+	return (0);
 }
 
 //call split if only one argument is passed to the function,
 //else call the other function
-int	main(int argc, char *argv[])
+int	main(int argc, char *argv[], char *envp[])
 {
 	if (argc == 2)
 	{
-		if (push_swap_2(argv[1]))
-			ft_print_error();
+		ft_printf("cmd = %s\n", argv[1]);
+		pipex(argc, argv, envp);
 	}
-	else if (argc > 2)
+	else
 	{
-		if (push_swap_1(argc, argv))
-			ft_print_error();
+		ft_printf_fd(2, "Wrong number of arguments\n");
+		return (1);
 	}
 	return (0);
 }
