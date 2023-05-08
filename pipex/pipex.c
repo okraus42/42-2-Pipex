@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:42:22 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/08 12:55:53 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/08 15:42:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static int	ft_test_exec(t_pipex_info *info, int n)
 	int		fail;
 	char	*cmd;
 
+	ft_printf_fd(2, "Running ft_test_exec\n");
 	i = 0;
 	fail = 1;
 	//info->args = ft_split(info->av[1], ' ');
@@ -95,6 +96,7 @@ static int	ft_pipes(t_pipex_info *info)
 	int	i;
 	int	j;
 
+	ft_printf("Running ft_pipes\n");
 	info->pids = ft_calloc(info->arg, sizeof(int));
 	info->pipes = ft_calloc(info->arg - 1, sizeof(int*));
 	i = 0;
@@ -124,125 +126,138 @@ static int	ft_pipes(t_pipex_info *info)
 	if (info->pids[i] == 0)
 	{
 		//code
+		if (dup2(info->fdi, STDIN_FILENO) < 0) //STDIN_FILENO = 0;
+		{
+			ft_printf_fd(2, "Error 00");
+		}
 		//close unnecessary pipes
 		j = 0;
+		
 		while (j < info->arg - 1)
 		{
-			if (j != i)
+			if (j != i - 1)
 			{
 				close(info->pipes[j][0]);
 			}
-			if (j != i + 1)
+			if (j != i)
 			{
 				close(info->pipes[j][1]);
 			}
 			j++;
 		}
-		//dup2(info->pipes[i - 1][0], STDIN_FILENO); //STDIN_FILENO = 0;
-		dup2(info->fdi, STDIN_FILENO); //STDIN_FILENO = 0;
-		dup2(info->pipes[i][1], STDOUT_FILENO); // STDOUT_FILENO = 1;
-		close(info->pipes[i][1]);
+		if (dup2(info->pipes[i][1], STDOUT_FILENO) < 0) // STDOUT_FILENO = 1;
+		{
+			ft_printf_fd(2, "Error 00");
+		}
+		close(info->pipes[0][1]);
 		//close file descriptor???
 		ft_test_exec(info, i);
 	}
 	// super loop for the middle pipes
-	i = info->arg;
-	info->pids[i] = fork();
-	if (info->pids[i] == -1)
-	{
-		ft_printf_fd(2, "Error with creating process\n");
-		return (2);
-	}
-	// Child process to handle outfile
-	if (info->pids[i] == 0)
-	{
-		//code
-		//close unnecessary pipes
-		j = 0;
-		while (j < info->arg - 1)
-		{
-			if (j != i)
-			{
-				close(info->pipes[j][0]);
-			}
-			if (j != i + 1)
-			{
-				close(info->pipes[j][1]);
-			}
-			j++;
-		}
-		dup2(info->pipes[i - 1][0], STDIN_FILENO); //STDIN_FILENO = 0;
-		dup2(info->fdo, STDOUT_FILENO); //STDOUT_FILENO = 1;
-		//dup2(info->pipes[i][1], STDOUT_FILENO); // STDOUT_FILENO = 1;
-		close(info->pipes[i][0]);
-		//close file descriptor???
-		ft_test_exec(info, i);
-	}
-	/*
 	i = 1;
-
-	while (i < info->arg)
+	while (i < info->arg - 1)
 	{
+		sleep(1);
 		info->pids[i] = fork();
 		if (info->pids[i] == -1)
 		{
 			ft_printf_fd(2, "Error with creating process\n");
 			return (2);
 		}
-		// Child process
-		// each process reads from i and writes to i + 1;
 		if (info->pids[i] == 0)
 		{
+			ft_printf("Hello from child %i\n", i);
+			if (dup2(info->pipes[i - 1][0], STDIN_FILENO) < 0) //STDIN_FILENO = 0;
+			{
+				ft_printf_fd(2, "Error 00");
+			}
+			if (dup2(info->pipes[i][1], STDOUT_FILENO) < 0) // STDOUT_FILENO = 1;
+			{
+				ft_printf_fd(2, "Error 00");
+			}
+			close(info->pipes[i][1]);
+			close(info->pipes[i - 1][0]);
 			//close unnecessary pipes
 			j = 0;
-			while (j < info->arg + 1)
+			
+			while (j < info->arg - 1)
 			{
-				if (j != i)
+				if (j != i - 1)
 				{
 					close(info->pipes[j][0]);
 				}
-				if (j != i + 1)
+				if (j != i)
 				{
 					close(info->pipes[j][1]);
 				}
 				j++;
 			}
-			if (read(info->pipes[i][0], &x, sizeof(int)) == -1)
-			{
-				ft_printf_fd(2, "Error at reading\n");
-				return (3);
-			}
-			//printf("(%d) got %d\n", i, x);
-			close(info->pipes[i][0]);
-			x++;
-			if (write(info->pipes[i + 1][1], &x, sizeof(int)) == -1)
-			{
-				ft_printf_fd(2, "Error at writing\n");
-				return (4);
-			}
-			//printf("(%d) sent %d\n", i, x);
-			close(info->pipes[i + 1][1]);
-			//break; alternative to return 0, terminates the loop.
-			return (0);
+			ft_test_exec(info, i);
 		}
+		ft_printf("Hello from parent after creating child %i\n", i);
+		////END OF LOOP
 		i++;
 	}
-	*/
-
+	// Child process to handle outfile
+	i = info->arg - 1;
+	info->pids[i] = fork();
+	if (info->pids[i] == -1)
+	{
+		ft_printf_fd(2, "Error with creating process\n");
+		return (2);
+	}
+	if (info->pids[i] == 0)
+	{
+		sleep(2);
+		//code
+		// ft_printf("Process%i goes to sleep\n", i);
+		// sleep(4);
+		// ft_printf("Process%i wakes up\n", i);
+		//close unnecessary pipes
+		j = 0;
+		
+		while (j < info->arg - 1)
+		{
+			if (j != i - 1)
+			{
+				close(info->pipes[j][0]);
+			}
+			if (j != i)
+			{
+				close(info->pipes[j][1]);
+			}
+			j++;
+		}
+		if (dup2(info->pipes[i - 1][0], STDIN_FILENO) < 0) //STDIN_FILENO = 0;
+		{
+			ft_printf_fd(2, "Error 00");
+		}
+		close(info->pipes[i - 1][0]);
+		dup2(info->fdo, STDOUT_FILENO); //STDOUT_FILENO = 1;
+		//close file descriptor???
+		// ft_printf("Process%i goes to sleep\n", i);
+		// sleep(4);
+		// ft_printf("Process%i wakes up\n", i);
+		ft_test_exec(info, i);
+	}
+	ft_printf("Hello from parent near end %i\n", i);
 	// MAIN PROCESS
 	j = 0;
-	while (j < info->arg + 1)
+	while (j < info->arg - 1)
 	{
 		close(info->pipes[j][0]);
 		close(info->pipes[j][1]);
 		j++;
 	}
+	i = 0;
+	sleep(5);
+	ft_printf_fd(2, "waited for %i", i);
 	while (i < info->arg)
 	{
-		wait(NULL); //waitpid would be better?
+		waitpid(info->pids[i], NULL, 0); //waitpid would be better?
 		i++;
+		ft_printf_fd(2, "waited for %i", i);
 	}
-
 	return (0);
 }
 
@@ -250,6 +265,7 @@ static int	ft_args(t_pipex_info *info)
 {
 	int	i;
 
+	ft_printf("Running ft_args\n");
 	i = 0;
 	info->args = NULL;
 	info->args = ft_calloc(info->ac - 2, sizeof(char**));
@@ -268,6 +284,7 @@ static int	ft_paths(t_pipex_info *info)
 {
 	int	i;
 
+	ft_printf("Running ft_paths\n");
 	i = 0;
 	info->paths = NULL;
 	//ft_printf("%i = %s\n", i, info->ev[5]);
@@ -291,6 +308,7 @@ static int	ft_copy_strarray(int n, char **src, char ***dst)
 	int	i;
 	int	j;
 
+	ft_printf("Running ft_copy_str_array\n");
 	i = 0;
 	dst[0] = ft_calloc((n + 1), sizeof(char*));
 	if (!dst[0])
@@ -351,6 +369,7 @@ static int	ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[])
 		i++;
 	}
 	//check here_doc
+	ft_printf("opening stuff\n");
 	info->fdi = open(info->av[1], O_RDONLY);
 	info->fdo = open(info->av[ac - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	//check if filedescriptors are okay
