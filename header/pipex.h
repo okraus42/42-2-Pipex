@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/06 18:52:08 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/07 15:11:20 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # include <stdarg.h>
 # include <sys/wait.h> //check if needed, but it must be
 # include <time.h> //check if needed
+# include <sys/types.h> //open function1
+# include <sys/stat.h> //open function2
+# include <fcntl.h> //open function3
 # include "../libft/header/libft.h"
 
 // DEFINITIONS
@@ -33,19 +36,30 @@
 typedef struct s_pipex_info
 {
 	int		ac;
+	int		fdi;
+	int		fdo;
+	int		arg;
+	int		*pids;
+	int		**pipes;
 	char	**av;
 	char	**ev;
 	char	**paths;
-	char	**args;
+	char	***args;
 }	t_pipex_info;
 
-typedef struct s_ps_arr
-{
-	int	i;
-	int	j;
-	int	min;
-	int	tmp;
-}		t_ps_arr;
+// typedef struct s_pipex_info
+// {
+// 	int		ac;			//argc
+// 	int		fdi;		//fd of infile
+// 	int		fdo;		//fd of outfile
+//	int		arg;		//number of arguments
+//	int		*pids;		//pids of child processes
+//	int		**pipes;	//pipe fds
+// 	char	**av;		//*argv[]
+// 	char	**ev;		//*envp[]
+// 	char	**paths;	//array of paths from envp
+// 	char	**args;		//array of arguments
+// }	t_pipex_info;
 
 // PROTOTYPES
 

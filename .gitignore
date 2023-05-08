@@ -4,6 +4,10 @@
 # Hidden stuff
 .*
 
+# Test stuff
+input
+output
+
 # Do not ignore gitignore
 !.gitignore
 
