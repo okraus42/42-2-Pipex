@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/07 15:11:20 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/09 17:18:25 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,27 @@ typedef struct s_pipex_info
 // 	char	**av;		//*argv[]
 // 	char	**ev;		//*envp[]
 // 	char	**paths;	//array of paths from envp
-// 	char	**args;		//array of arguments
+// 	char	**args;		//array of arrays of arguments
 // }	t_pipex_info;
 
 // PROTOTYPES
 
-//void	*ft_prefill_array(int ***array);
+//	ft_paths
+void	ft_fix_first_path(char **s);
+char	*ft_pathjoin(char *path, char *cmd);
+int		ft_paths(t_pipex_info *info);
+
+// ft_utils
+int		ft_test_exec(t_pipex_info *info, int n);
+int		ft_args(t_pipex_info *info);
+int		ft_copy_strarray(int n, char **src, char ***dst);
+int		ft_dup(int newinput, int newoutput);
+
+// ft_pipes
+int		ft_pipes(t_pipex_info *info);
+
+// ft_getinfo
+int	ft_open_pipes(t_pipex_info *info);
+int	ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[]);
 
 #endif

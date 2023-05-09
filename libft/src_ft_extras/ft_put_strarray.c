@@ -1,37 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   ft_put_strarray.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 15:42:22 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/09 16:35:02 by okraus           ###   ########.fr       */
+/*   Created: 2023/05/08 17:11:53 by okraus            #+#    #+#             */
+/*   Updated: 2023/05/09 15:02:52 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "../header/libft.h"
 
-static int	pipex(int argc, char *argv[], char *envp[])
+void	ft_put_strarray(char **arr)
 {
-	t_pipex_info	info;
-	int				i;
+	int	i;
 
-	ft_get_info(&info, argc, argv, envp);
-	ft_pipes(&info);
-	return (0);
-}
-
-int	main(int argc, char *argv[], char *envp[])
-{
-	if (argc > 3)
+	i = 0;
+	while (arr[i])
 	{
-		pipex(argc, argv, envp);
+		ft_printf("arr%02i : %s\n", i, arr[i]);
+		i++;
 	}
-	else
-	{
-		ft_printf_fd(2, "Wrong number of arguments\n");
-		return (1);
-	}
-	return (0);
 }

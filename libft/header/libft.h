@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 13:43:29 by okraus            #+#    #+#             */
-/*   Updated: 2023/03/19 15:44:06 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/09 15:03:28 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,9 @@ void		ft_free_split(char **split);
 // memory
 void		*ft_print_memory(void *addr, int fd, unsigned int size);
 void		*ft_print_memory_plus(void *addr, int fd, unsigned int size);
+
+// printing array of strings
+void		ft_put_strarray(char **arr);
 
 // GET_NEXT_LINE prototypes
 
