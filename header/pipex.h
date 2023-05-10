@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/09 17:18:25 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:59:04 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int		ft_paths(t_pipex_info *info);
 
 // ft_utils
 int		ft_test_exec(t_pipex_info *info, int n);
+int		ft_fail_exec(t_pipex_info *info, int n);
 int		ft_args(t_pipex_info *info);
 int		ft_copy_strarray(int n, char **src, char ***dst);
 int		ft_dup(int newinput, int newoutput);

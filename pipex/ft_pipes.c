@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:55:55 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/09 17:17:36 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:58:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ int	ft_firstpipe(t_pipex_info *info, int i, int j)
 			close(info->pipes[j][1]);
 			j++;
 		}
-		ft_test_exec(info, i);
+		if (ft_test_exec(info, i))
+			ft_fail_exec(info, i);
 	}
 	return (0);
 }
 
 int	ft_middlepipes(t_pipex_info *info, int i, int j)
 {
-	i = 1;
 	while (i < info->arg - 1)
 	{
 		info->pids[i] = fork();
@@ -59,7 +59,8 @@ int	ft_middlepipes(t_pipex_info *info, int i, int j)
 				close(info->pipes[j][1]);
 				j++;
 			}
-			ft_test_exec(info, i);
+			if (ft_test_exec(info, i))
+				ft_fail_exec(info, i);
 		}
 		i++;
 	}
@@ -86,7 +87,8 @@ int	ft_lastpipe(t_pipex_info *info, int i, int j)
 			close(info->pipes[j][1]);
 			j++;
 		}
-		ft_test_exec(info, i);
+		if (ft_test_exec(info, i))
+			ft_fail_exec(info, i);
 	}
 	return (0);
 }
@@ -97,6 +99,7 @@ int	ft_pipes(t_pipex_info *info)
 	int	j;
 
 	ft_firstpipe(info, i, j);
+	i = 1;
 	ft_middlepipes(info, i, j);
 	ft_lastpipe(info, i, j);
 	j = 0;
