@@ -6,13 +6,13 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:13:32 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/10 15:56:01 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/11 16:22:14 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/pipex.h"
 
-int	ft_test_exec(t_pipex_info *info, int n)
+int	ft_exec(t_pipex_info *info, int n)
 {
 	int		i;
 	int		fail;
@@ -34,11 +34,17 @@ int	ft_test_exec(t_pipex_info *info, int n)
 
 int	ft_fail_exec(t_pipex_info *info, int n)
 {
-	int		i;
+	//execlp("cat", "cat", NULL);
+	//return (1);
+
+	ft_free_info(info);
+	exit(0);
+	/*int		i;
 	int		fail;
 	char	*cmd;
 	char	**arr;
 
+	arr = NULL;
 	arr[0] = "echo";
 	arr[1] = NULL;
 	i = 0;
@@ -52,7 +58,7 @@ int	ft_fail_exec(t_pipex_info *info, int n)
 		i++;
 	}
 	ft_printf_fd(2, "%s: command not found\n", info->args[n][0]);
-	return (fail);
+	return (fail);*/
 }
 
 int	ft_args(t_pipex_info *info)

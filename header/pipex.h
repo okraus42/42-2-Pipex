@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/10 15:59:04 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/11 15:11:13 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_pipex_info
 // 	char	**av;		//*argv[]
 // 	char	**ev;		//*envp[]
 // 	char	**paths;	//array of paths from envp
-// 	char	**args;		//array of arrays of arguments
+// 	char	***args;		//array of arrays of arguments
 // }	t_pipex_info;
 
 // PROTOTYPES
@@ -79,7 +79,8 @@ int		ft_dup(int newinput, int newoutput);
 int		ft_pipes(t_pipex_info *info);
 
 // ft_getinfo
-int	ft_open_pipes(t_pipex_info *info);
-int	ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[]);
+int		ft_open_pipes(t_pipex_info *info);
+int		ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[]);
+int		ft_free_info(t_pipex_info *info);
 
 #endif

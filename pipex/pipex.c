@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:42:22 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/09 16:35:02 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/11 15:08:24 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static int	pipex(int argc, char *argv[], char *envp[])
 
 	ft_get_info(&info, argc, argv, envp);
 	ft_pipes(&info);
+	ft_free_info(&info);
 	return (0);
 }
 
