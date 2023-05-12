@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:13:32 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/11 16:22:14 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/12 18:19:03 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,8 @@ int	ft_exec(t_pipex_info *info, int n)
 
 int	ft_fail_exec(t_pipex_info *info, int n)
 {
-	//execlp("cat", "cat", NULL);
-	//return (1);
-
 	ft_free_info(info);
-	exit(0);
-	/*int		i;
-	int		fail;
-	char	*cmd;
-	char	**arr;
-
-	arr = NULL;
-	arr[0] = "echo";
-	arr[1] = NULL;
-	i = 0;
-	fail = 1;
-	while (info->paths[i])
-	{
-		cmd = ft_pathjoin(info->paths[i], "echo");
-		if (access(cmd, X_OK) == 0)
-			execve(cmd, arr, info->ev);
-		free(cmd);
-		i++;
-	}
-	ft_printf_fd(2, "%s: command not found\n", info->args[n][0]);
-	return (fail);*/
+	exit(n);
 }
 
 int	ft_args(t_pipex_info *info)

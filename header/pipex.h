@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:43:08 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/11 15:11:13 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/12 18:15:12 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_pipex_info
 	int		fdi;
 	int		fdo;
 	int		arg;
+	int		hd;
 	int		*pids;
 	int		**pipes;
 	char	**av;
@@ -53,6 +54,7 @@ typedef struct s_pipex_info
 // 	int		fdi;		//fd of infile
 // 	int		fdo;		//fd of outfile
 //	int		arg;		//number of arguments
+//	int		hd;			//1 if argv[1] == "here_doc"
 //	int		*pids;		//pids of child processes
 //	int		**pipes;	//pipe fds
 // 	char	**av;		//*argv[]
@@ -69,17 +71,19 @@ char	*ft_pathjoin(char *path, char *cmd);
 int		ft_paths(t_pipex_info *info);
 
 // ft_utils
-int		ft_test_exec(t_pipex_info *info, int n);
+int		ft_exec(t_pipex_info *info, int n);
 int		ft_fail_exec(t_pipex_info *info, int n);
 int		ft_args(t_pipex_info *info);
 int		ft_copy_strarray(int n, char **src, char ***dst);
 int		ft_dup(int newinput, int newoutput);
 
 // ft_pipes
+void	ft_heredoc(t_pipex_info *info, int i);
 int		ft_pipes(t_pipex_info *info);
 
 // ft_getinfo
 int		ft_open_pipes(t_pipex_info *info);
+int		ft_check_files(t_pipex_info *info);
 int		ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[]);
 int		ft_free_info(t_pipex_info *info);
 

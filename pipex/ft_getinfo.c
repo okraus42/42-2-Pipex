@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 16:34:19 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/11 15:15:39 by okraus           ###   ########.fr       */
+/*   Updated: 2023/05/12 18:06:11 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,35 @@ int	ft_open_pipes(t_pipex_info *info)
 		if (pipe(info->pipes[i]) == -1)
 		{
 			ft_printf_fd(2, "Error with creating pipe\n");
-			return (1);
+			ft_fail_exec(info, -1);
 		}
 		i++;
+	}
+	return (0);
+}
+
+int	ft_check_files(t_pipex_info *info)
+{
+	if (!info->hd)
+	{
+		if (!access(info->av[1], F_OK & R_OK))
+		{
+			info->fdi = open(info->av[1], O_RDONLY);
+		}
+		else
+		{
+			info->fdi = -1;
+			perror(info->av[1]);
+		}
+	}
+	if (!info->hd)
+		info->fdo = open(info->av[info->ac - 1], O_CREAT | O_WRONLY | O_TRUNC);
+	else
+		info->fdo = open(info->av[info->ac - 1], O_CREAT | O_WRONLY | O_APPEND);
+	if (access(info->av[info->ac - 1], F_OK | W_OK))
+	{
+		perror(info->av[info->ac - 1]);
+		info->fdo = -1;
 	}
 	return (0);
 }
@@ -43,9 +69,12 @@ int	ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[])
 	info->ev = ev;
 	ft_paths(info);
 	ft_args(info);
-	//check here_doc
-	info->fdi = open(info->av[1], O_RDONLY);
-	info->fdo = open(info->av[ac - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	info->hd = 0;
+	if (!ft_strncmp("here_doc", info->av[1], 9))
+	{
+		info->hd = 1;
+	}
+	ft_check_files(info);
 	info->pids = ft_calloc(info->arg, sizeof(int));
 	ft_open_pipes(info);
 	return (0);
