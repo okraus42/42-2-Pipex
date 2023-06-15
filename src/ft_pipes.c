@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:55:55 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/12 18:18:02 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/15 18:15:06 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ int	ft_pipes(t_pipex_info *info)
 	int	j;
 
 	i = 0;
+	j = 0;
 	if (!info->hd)
 		ft_firstpipe(info, i, j);
 	else
