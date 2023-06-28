@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:55:55 by okraus            #+#    #+#             */
-/*   Updated: 2023/06/15 18:15:06 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/28 15:31:39 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_heredoc(t_pipex_info *info, int i)
 	{
 		while (1)
 		{
-			write (0, "> ", 3);
+			write (0, "> ", 2);
 			line = get_next_line(0);
 			if (line == NULL)
 				ft_fail_exec(info, -2);

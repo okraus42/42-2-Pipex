@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 16:34:19 by okraus            #+#    #+#             */
-/*   Updated: 2023/05/12 18:06:11 by okraus           ###   ########.fr       */
+/*   Updated: 2023/06/28 15:41:48 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ int	ft_check_files(t_pipex_info *info)
 		}
 	}
 	if (!info->hd)
-		info->fdo = open(info->av[info->ac - 1], O_CREAT | O_WRONLY | O_TRUNC);
+		info->fdo = open(info->av[info->ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else
-		info->fdo = open(info->av[info->ac - 1], O_CREAT | O_WRONLY | O_APPEND);
+		info->fdo = open(info->av[info->ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (access(info->av[info->ac - 1], F_OK | W_OK))
 	{
 		perror(info->av[info->ac - 1]);
