@@ -6,7 +6,7 @@
 /*   By: okraus <okraus@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 16:34:19 by okraus            #+#    #+#             */
-/*   Updated: 2023/06/28 15:41:48 by okraus           ###   ########.fr       */
+/*   Updated: 2023/08/08 16:39:45 by okraus           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	ft_get_info(t_pipex_info *info, int ac, char *av[], char *ev[])
 	info->hd = 0;
 	if (!ft_strncmp("here_doc", info->av[1], 9))
 	{
+		info->fdi = 0;
 		info->hd = 1;
 	}
 	ft_check_files(info);
